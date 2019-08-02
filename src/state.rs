@@ -1,5 +1,8 @@
 use amethyst::{
-    assets::{Prefab, Handle, AssetStorage, Loader, PrefabData, PrefabLoader, PrefabLoaderSystem, ProgressCounter, RonFormat},
+    assets::{
+        AssetStorage, Handle, Loader, Prefab, PrefabData, PrefabLoader, PrefabLoaderSystem,
+        ProgressCounter, RonFormat,
+    },
     core::transform::Transform,
     input::{get_key, is_close_requested, is_key_down, VirtualKeyCode},
     prelude::*,
@@ -7,11 +10,8 @@ use amethyst::{
     window::ScreenDimensions,
 };
 
+use crate::player::{Ball, Direction};
 use crate::prefabs::BallPrefabData;
-use crate::player::{
-    Direction,
-    Ball
-};
 
 use log::info;
 
@@ -32,9 +32,9 @@ impl SimpleState for MyState {
         // Place the camera
         init_camera(world, &dimensions);
 
-//        // Load our sprites and display them
-//        let sprites = load_sprites(world);
-//        init_sprites(world, &sprites, &dimensions);
+        //        // Load our sprites and display them
+        //        let sprites = load_sprites(world);
+        //        init_sprites(world, &sprites, &dimensions);
 
         let ball_prefab = load_ball_prefab(world);
         init_ball(world, ball_prefab);
@@ -81,11 +81,7 @@ fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
 
 fn load_ball_prefab(world: &mut World) -> Handle<Prefab<BallPrefabData>> {
     world.exec(|loader: PrefabLoader<'_, BallPrefabData>| {
-        loader.load(
-            "prefabs/ball.ron",
-            RonFormat,
-            (),
-        )
+        loader.load("prefabs/ball.ron", RonFormat, ())
     })
 }
 
@@ -104,7 +100,6 @@ fn init_ball(world: &mut World, prefab: Handle<Prefab<BallPrefabData>>) {
         .with(transform)
         .with(Ball::new(1.0f32, Direction::Right))
         .build();
-
 }
 
 fn load_sprites(world: &mut World) -> Vec<SpriteRender> {

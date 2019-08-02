@@ -43,7 +43,7 @@ impl Direction {
 impl Ball {
     pub fn new(velocity: f32, direction: Direction) -> Self {
         Ball {
-            velocity, 
+            velocity,
             direction: direction.to_unit_vector(),
         }
     }

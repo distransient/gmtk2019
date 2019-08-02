@@ -1,9 +1,9 @@
 use crate::player::Direction;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 pub enum Tile {
-    Nothing, 
+    Nothing,
     Wall,
     Breakable,
     Pusher,

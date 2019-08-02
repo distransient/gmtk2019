@@ -1,23 +1,23 @@
 extern crate specs_derive;
 
 use amethyst::{
+    assets::PrefabLoaderSystem,
     core::transform::TransformBundle,
+    input::StringBindings,
     prelude::*,
     renderer::{
         plugins::{RenderFlat2D, RenderToWindow},
         types::DefaultBackend,
         RenderingBundle,
     },
-    input::StringBindings,
+    ui::{RenderUi, UiBundle},
     utils::application_root_dir,
-    ui::{UiBundle, RenderUi},
-    assets::PrefabLoaderSystem,
 };
 
-mod state;
-mod prefabs;
 mod environment;
 mod player;
+mod prefabs;
+mod state;
 
 use crate::prefabs::BallPrefabData;
 
@@ -30,7 +30,11 @@ fn main() -> amethyst::Result<()> {
     let display_config = resources.join("display_config.ron");
 
     let game_data = GameDataBuilder::default()
-        .with(PrefabLoaderSystem::<BallPrefabData>::default(), "prefab_loader", &[])
+        .with(
+            PrefabLoaderSystem::<BallPrefabData>::default(),
+            "prefab_loader",
+            &[],
+        )
         .with_bundle(TransformBundle::new())?
         .with_bundle(UiBundle::<StringBindings>::new())?
         .with_bundle(

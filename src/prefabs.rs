@@ -1,10 +1,10 @@
 use amethyst::{
-    Error,
-    prelude::*,
-    ecs::prelude::*,
-    renderer::sprite::prefab::SpriteScenePrefab,
-    assets::{ProgressCounter, PrefabData},
+    assets::{PrefabData, ProgressCounter},
     derive::PrefabData,
+    ecs::prelude::*,
+    prelude::*,
+    renderer::sprite::prefab::SpriteScenePrefab,
+    Error,
 };
 use serde::{Deserialize, Serialize};
 
