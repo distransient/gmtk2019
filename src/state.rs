@@ -1,11 +1,13 @@
 use amethyst::{
-    assets::{AssetStorage, Loader},
+    assets::{Prefab, Handle, AssetStorage, Loader, PrefabData, PrefabLoader, PrefabLoaderSystem, ProgressCounter, RonFormat},
     core::transform::Transform,
     input::{get_key, is_close_requested, is_key_down, VirtualKeyCode},
     prelude::*,
     renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
     window::ScreenDimensions,
 };
+
+use crate::prefabs::BallPrefabData;
 
 use log::info;
 
@@ -68,6 +70,16 @@ fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
         .with(Camera::standard_2d(dimensions.width(), dimensions.height()))
         .with(transform)
         .build();
+}
+
+fn load_ball_prefab(world: &mut World) -> Handle<Prefab<BallPrefabData>> {
+    world.exec(|loader: PrefabLoader<'_, BallPrefabData>| {
+        loader.load(
+            "prefabs/ball.ron",
+            RonFormat,
+            (),
+        )
+    })
 }
 
 fn load_sprites(world: &mut World) -> Vec<SpriteRender> {

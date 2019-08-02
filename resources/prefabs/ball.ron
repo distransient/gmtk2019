@@ -1,0 +1,63 @@
+#![enable(implicit_some)]
+Prefab (
+    entities: [
+        PrefabEntity(
+             data: MyPrefabData(
+                 // SpriteScenePrefab
+                 sprite_scene: (
+                     // SpriteSheetPrefab with index 0
+                     sheet: Sheet(
+                         // TexturePrefab
+                         texture: File("sprites/ball.png", (
+                             "IMAGE", (
+                                 sampler_info: (
+                                     min_filter: Nearest,
+                                     mag_filter: Nearest,
+                                     mip_filter: Nearest,
+                                     wrap_mode: (Tile, Tile, Tile),
+                                     lod_bias: (0),
+                                     lod_range: (
+                                         start: ( 0 ),
+                                         end: ( 8000 ),
+                                     ),
+                                     comparison: None,
+                                     border: (0),
+                                     anisotropic: Off,
+                                 ),
+                             ),
+                         )),
+                         sprites: [
+                             // Grey bat sprites
+                             // Sprites with indexes from 0 to 5
+                             Grid((
+                                 texture_width: 40,
+                                 texture_height: 40,
+                                 columns: 1,
+                                 rows: 1,
+                                 cell_size: (40, 40),
+                             )),
+                             List((
+                                 texture_width: 40,
+                                 texture_height: 40,
+                                 sprites: [
+                                     (x: 0,   y: 0, width: 40, height: 40),
+                                 ],
+                             )),
+                         ],
+                         // optional
+                         name: "ball",
+                     ),
+                     // SpriteRenderPrefab
+                     render: (
+                         sheet: "ball",
+                         sprite_number: 0,
+                     ),
+                     // Transform
+                     transform: (
+                         translation: (150.0, 37.5, 0.0),
+                     ),
+                 ),
+             ),
+         ),
+    ],
+)

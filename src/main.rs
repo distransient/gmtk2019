@@ -6,11 +6,16 @@ use amethyst::{
         types::DefaultBackend,
         RenderingBundle,
     },
+    input::StringBindings,
     utils::application_root_dir,
-    ui::RenderUi,
+    ui::{UiBundle, RenderUi},
+    assets::PrefabLoaderSystem,
 };
 
 mod state;
+mod prefabs;
+
+use crate::prefabs::BallPrefabData;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -21,7 +26,9 @@ fn main() -> amethyst::Result<()> {
     let display_config = resources.join("display_config.ron");
 
     let game_data = GameDataBuilder::default()
+        .with(PrefabLoaderSystem::<BallPrefabData>::default(), "prefab_loader", &[])
         .with_bundle(TransformBundle::new())?
+        .with_bundle(UiBundle::<StringBindings>::new())?
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 // The RenderToWindow plugin provides all the scaffolding for opening a window and drawing on it
