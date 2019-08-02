@@ -7,11 +7,9 @@ use amethyst::{
         RenderingBundle,
     },
     utils::application_root_dir,
-    ui::{RenderUi, UiBundle},
-    window::WindowBundle,
+    ui::RenderUi,
 };
 
-mod render;
 mod state;
 
 fn main() -> amethyst::Result<()> {
@@ -21,8 +19,6 @@ fn main() -> amethyst::Result<()> {
 
     let resources = app_root.join("resources");
     let display_config = resources.join("display_config.ron");
-
-    let render_graph = render::RenderGraph::default();
 
     let game_data = GameDataBuilder::default()
         .with_bundle(TransformBundle::new())?
