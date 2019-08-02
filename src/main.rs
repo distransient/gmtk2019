@@ -13,6 +13,7 @@ use amethyst::{
 };
 
 mod state;
+mod player;
 mod environment;
 
 fn main() -> amethyst::Result<()> {
