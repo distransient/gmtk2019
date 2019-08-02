@@ -11,11 +11,17 @@ use amethyst::{
 };
 
 use crate::player::{Ball, Direction};
-use crate::prefabs::BallPrefabData;
+use crate::prefabs::SpritePrefabData;
 
 use log::info;
 
-pub struct MyState;
+#[derive(Default)]
+pub struct MyState{
+    ball_prefab_progress: Option<ProgressCounter>,
+
+    ball_prefab: Option<Handle<Prefab<SpritePrefabData>>>,
+wall_prefab: Option<Handle<Prefab<SpritePrefabData>>>,
+}
 
 impl SimpleState for MyState {
     // On start will run when this state is initialized. For more
@@ -32,8 +38,21 @@ impl SimpleState for MyState {
         // Place the camera
         init_camera(world, &dimensions);
 
-        let ball_prefab = load_ball_prefab(world);
-        init_ball(world, ball_prefab);
+        let ball_prefab = self.load_ball_prefab(world);
+        self.init_ball(world);
+    }
+
+    fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans{
+        if self.wall_prefab == None && self.ball_prefab_progress.as_ref().unwrap().is_complete() {
+            self.wall_prefab = Some(data.world.exec(|loader: PrefabLoader<'_, SpritePrefabData>| {
+                loader.load("prefabs/wall.ron", RonFormat, ())
+            }));
+            data.world
+                .create_entity()
+                .with(self.wall_prefab.as_ref().unwrap().clone())
+                .build();
+        }
+        Trans::None
     }
 
     fn handle_event(
@@ -75,25 +94,30 @@ fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
         .build();
 }
 
-fn load_ball_prefab(world: &mut World) -> Handle<Prefab<BallPrefabData>> {
-    world.exec(|loader: PrefabLoader<'_, BallPrefabData>| {
-        loader.load("prefabs/ball.ron", RonFormat, ())
-    })
+impl MyState  {
+    fn load_ball_prefab(&mut self, world: &mut World) {
+        self.ball_prefab_progress = Some(ProgressCounter::new());
+        self.ball_prefab = Some(world.exec(|loader: PrefabLoader<'_, SpritePrefabData>| {
+            loader.load("prefabs/ball.ron", RonFormat, self.ball_prefab_progress.as_mut().unwrap())
+        }));
+    }
+
+    fn init_ball(&self, world: &mut World) {
+        world.register::<Ball>();
+        let mut transform = Transform::default();
+        transform.set_translation_xyz(40.0, 40.0, 0.);
+
+        // Create an entity for each sprite and attach the `SpriteRender` as
+        // well as the transform. If you want to add behaviour to your sprites,
+        // you'll want to add a custom `Component` that will identify them, and a
+        // `System` that will iterate over them. See https://book.amethyst.rs/stable/concepts/system.html
+        world
+            .create_entity()
+            .with(self.ball_prefab.as_ref().unwrap().clone())
+            .with(transform)
+            .with(Ball::new(1.0f32, Direction::Right))
+            .build();
+    }
+
 }
 
-fn init_ball(world: &mut World, prefab: Handle<Prefab<BallPrefabData>>) {
-    world.register::<Ball>();
-    let mut transform = Transform::default();
-    transform.set_translation_xyz(40.0, 40.0, 0.);
-
-    // Create an entity for each sprite and attach the `SpriteRender` as
-    // well as the transform. If you want to add behaviour to your sprites,
-    // you'll want to add a custom `Component` that will identify them, and a
-    // `System` that will iterate over them. See https://book.amethyst.rs/stable/concepts/system.html
-    world
-        .create_entity()
-        .with(prefab.clone())
-        .with(transform)
-        .with(Ball::new(1.0f32, Direction::Right))
-        .build();
-}

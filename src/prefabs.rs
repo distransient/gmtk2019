@@ -11,6 +11,6 @@ use serde::{Deserialize, Serialize};
 use crate::player::Ball;
 
 #[derive(Debug, Clone, Deserialize, PrefabData)]
-pub struct BallPrefabData {
+pub struct SpritePrefabData {
     sprite_scene: SpriteScenePrefab,
 }

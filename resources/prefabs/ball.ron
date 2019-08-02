@@ -2,7 +2,7 @@
 Prefab (
     entities: [
         PrefabEntity(
-             data: BallPrefabData(
+             data: (
                  // SpriteScenePrefab
                  sprite_scene: (
                      // SpriteSheetPrefab with index 0
@@ -34,8 +34,7 @@ Prefab (
                                  rows: 4,
                                  cell_size: (40, 40),
                              )),
-                             List(
-                                (
+                             List((
                                     texture_width: 200,
                                     texture_height: 160,
                                     sprites: [
@@ -204,16 +203,12 @@ Prefab (
                              ),
                          ],
                          // optional
-                         name: "ball",
+                         name: "main_sheet",
                      ),
                      // SpriteRenderPrefab
                      render: (
-                         sheet: "ball",
+                         sheet: "main_sheet",
                          sprite_number: 0,
-                     ),
-                     // Transform
-                     transform: (
-                         translation: (100.0, 100.0, 0.0),
                      ),
                  ),
              ),

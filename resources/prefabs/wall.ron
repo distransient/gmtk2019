@@ -1,0 +1,21 @@
+#![enable(implicit_some)]
+Prefab (
+    entities: [
+        PrefabEntity(
+             data: (
+                 // SpriteScenePrefab
+                 sprite_scene: (
+                     // SpriteRenderPrefab
+                     render: (
+                         sheet: "main_sheet",
+                         sprite_number: 1,
+                     ),
+                     // Transform
+                     transform: (
+                         translation: (100.0, 100.0, 0.0),
+                     ),
+                 ),
+             ),
+         ),
+    ],
+)

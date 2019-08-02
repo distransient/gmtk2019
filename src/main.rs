@@ -19,7 +19,7 @@ mod player;
 mod prefabs;
 mod state;
 
-use crate::prefabs::BallPrefabData;
+use crate::prefabs::SpritePrefabData;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -31,7 +31,7 @@ fn main() -> amethyst::Result<()> {
 
     let game_data = GameDataBuilder::default()
         .with(
-            PrefabLoaderSystem::<BallPrefabData>::default(),
+            PrefabLoaderSystem::<SpritePrefabData>::default(),
             "prefab_loader",
             &[],
         )
@@ -48,7 +48,7 @@ fn main() -> amethyst::Result<()> {
                 .with_plugin(RenderUi::default()),
         )?;
 
-    let mut game = Application::new(resources, state::MyState, game_data)?;
+    let mut game = Application::new(resources, state::MyState::default(), game_data)?;
     game.run();
 
     Ok(())
