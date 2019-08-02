@@ -28,9 +28,12 @@ impl SimpleState for MyState {
         // Place the camera
         init_camera(world, &dimensions);
 
-        // Load our sprites and display them
-        let sprites = load_sprites(world);
-        init_sprites(world, &sprites, &dimensions);
+//        // Load our sprites and display them
+//        let sprites = load_sprites(world);
+//        init_sprites(world, &sprites, &dimensions);
+
+        let ball_prefab = load_ball_prefab(world);
+        init_ball(world, ball_prefab);
     }
 
     fn handle_event(
@@ -80,6 +83,22 @@ fn load_ball_prefab(world: &mut World) -> Handle<Prefab<BallPrefabData>> {
             (),
         )
     })
+}
+
+fn init_ball(world: &mut World, prefab: Handle<Prefab<BallPrefabData>>) {
+    let mut transform = Transform::default();
+    transform.set_translation_xyz(40.0, 40.0, 0.);
+
+    // Create an entity for each sprite and attach the `SpriteRender` as
+    // well as the transform. If you want to add behaviour to your sprites,
+    // you'll want to add a custom `Component` that will identify them, and a
+    // `System` that will iterate over them. See https://book.amethyst.rs/stable/concepts/system.html
+    world
+        .create_entity()
+        .with(prefab.clone())
+        .with(transform)
+        .build();
+
 }
 
 fn load_sprites(world: &mut World) -> Vec<SpriteRender> {

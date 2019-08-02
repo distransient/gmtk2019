@@ -2,7 +2,7 @@
 Prefab (
     entities: [
         PrefabEntity(
-             data: MyPrefabData(
+             data: BallPrefabData(
                  // SpriteScenePrefab
                  sprite_scene: (
                      // SpriteSheetPrefab with index 0
@@ -54,7 +54,7 @@ Prefab (
                      ),
                      // Transform
                      transform: (
-                         translation: (150.0, 37.5, 0.0),
+                         translation: (100.0, 100.0, 0.0),
                      ),
                  ),
              ),

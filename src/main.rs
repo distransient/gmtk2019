@@ -1,3 +1,5 @@
+extern crate specs_derive;
+
 use amethyst::{
     core::transform::TransformBundle,
     prelude::*,
@@ -14,6 +16,7 @@ use amethyst::{
 
 mod state;
 mod prefabs;
+mod environment;
 
 use crate::prefabs::BallPrefabData;
 
