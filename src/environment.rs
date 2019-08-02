@@ -5,7 +5,7 @@ use serde::{Serialize, Deserialize};
 pub enum Tile {
     Nothing, 
     Wall,
-    Breakable {broken: bool},
+    Breakable,
     Pusher,
 }
 
