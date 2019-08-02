@@ -8,7 +8,7 @@ Prefab (
                      // SpriteSheetPrefab with index 0
                      sheet: Sheet(
                          // TexturePrefab
-                         texture: File("sprites/ball.png", (
+                         texture: File("sprites/tilesheet.png", (
                              "IMAGE", (
                                  sampler_info: (
                                      min_filter: Nearest,
@@ -27,22 +27,181 @@ Prefab (
                              ),
                          )),
                          sprites: [
-                             // Grey bat sprites
-                             // Sprites with indexes from 0 to 5
                              Grid((
-                                 texture_width: 40,
-                                 texture_height: 40,
-                                 columns: 1,
-                                 rows: 1,
+                                 texture_width: 200,
+                                 texture_height: 160,
+                                 columns: 5,
+                                 rows: 4,
                                  cell_size: (40, 40),
                              )),
-                             List((
-                                 texture_width: 40,
-                                 texture_height: 40,
-                                 sprites: [
-                                     (x: 0,   y: 0, width: 40, height: 40),
-                                 ],
-                             )),
+                             List(
+                                (
+                                    texture_width: 200,
+                                    texture_height: 160,
+                                    sprites: [
+                                        (
+                                            x: 0,
+                                            y: 0,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 40,
+                                            y: 0,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 80,
+                                            y: 0,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 120,
+                                            y: 0,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 160,
+                                            y: 0,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 0,
+                                            y: 40,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 40,
+                                            y: 40,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 80,
+                                            y: 40,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 120,
+                                            y: 40,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 160,
+                                            y: 40,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 0,
+                                            y: 80,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 40,
+                                            y: 80,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 80,
+                                            y: 80,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 120,
+                                            y: 80,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 160,
+                                            y: 80,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 0,
+                                            y: 120,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 40,
+                                            y: 120,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 80,
+                                            y: 120,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 120,
+                                            y: 120,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                        (
+                                            x: 160,
+                                            y: 120,
+                                            width: 40,
+                                            height: 40,
+                                            flip_horizontal: false,
+                                            flip_vertical: false,
+                                        ),
+                                    ],
+                                )
+                             ),
                          ],
                          // optional
                          name: "ball",
