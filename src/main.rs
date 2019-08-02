@@ -1,3 +1,5 @@
+extern crate specs_derive;
+
 use amethyst::{
     core::transform::TransformBundle,
     prelude::*,
@@ -11,6 +13,7 @@ use amethyst::{
 };
 
 mod state;
+mod environment;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
