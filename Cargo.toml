@@ -1,15 +1,16 @@
 [package]
-name = "amethyst-starter-2d"
+name = "Only-One"
 version = "0.1.0"
-authors = ["Hilmar Wiegand <me@hwgnd.de>"]
+authors = ["People <people@people.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst = "0.11.0"
+amethyst = "0.12.0"
 log = { version = "0.4.6", features = ["serde"] }
 
 [features]
 default = ["vulkan"]
+
 empty = ["amethyst/empty"]
 metal = ["amethyst/metal"]
 vulkan = ["amethyst/vulkan"]

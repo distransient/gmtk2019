@@ -1,12 +1,13 @@
 use amethyst::{
-    assets::Processor,
     core::transform::TransformBundle,
     prelude::*,
     renderer::{
-        sprite_visibility::SpriteVisibilitySortingSystem, types::DefaultBackend, RenderingSystem,
-        SpriteSheet,
+        plugins::{RenderFlat2D, RenderToWindow},
+        types::DefaultBackend,
+        RenderingBundle,
     },
     utils::application_root_dir,
+    ui::{RenderUi, UiBundle},
     window::WindowBundle,
 };
 
@@ -22,22 +23,19 @@ fn main() -> amethyst::Result<()> {
     let display_config = resources.join("display_config.ron");
 
     let render_graph = render::RenderGraph::default();
-    let render_system = RenderingSystem::<DefaultBackend, _>::new(render_graph);
 
     let game_data = GameDataBuilder::default()
-        .with_bundle(WindowBundle::from_config_path(display_config))?
         .with_bundle(TransformBundle::new())?
-        .with(
-            SpriteVisibilitySortingSystem::new(),
-            "sprite_visibility_system",
-            &["transform_system"],
-        )
-        .with(
-            Processor::<SpriteSheet>::new(),
-            "sprite_sheet_processor",
-            &[],
-        )
-        .with_thread_local(render_system);
+        .with_bundle(
+            RenderingBundle::<DefaultBackend>::new()
+                // The RenderToWindow plugin provides all the scaffolding for opening a window and drawing on it
+                .with_plugin(
+                    RenderToWindow::from_config_path(display_config)
+                        .with_clear([0.34, 0.36, 0.52, 1.0]),
+                )
+                .with_plugin(RenderFlat2D::default())
+                .with_plugin(RenderUi::default()),
+        )?;
 
     let mut game = Application::new(resources, state::MyState, game_data)?;
     game.run();
