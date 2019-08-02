@@ -8,6 +8,7 @@ use amethyst::{
 };
 use serde::{Deserialize, Serialize};
 
+use crate::player::Ball;
 
 #[derive(Debug, Clone, Deserialize, PrefabData)]
 pub struct BallPrefabData {

@@ -1,9 +1,12 @@
-use amethyst::core::nalgebra::{Unit, Vector2};
+use amethyst::core::math::{Unit, Vector2};
+use amethyst::ecs::prelude::*;
 
-#[derive(Component)]
 pub struct Ball {
     velocity: f32, // could probably be raised as game gets more difficult
     direction: Unit<Vector2<f32>>,
+}
+impl Component for Ball {
+    type Storage = DenseVecStorage<Self>;
 }
 
 pub enum Direction {
@@ -29,7 +32,7 @@ impl Direction {
 }
 
 impl Ball {
-    fn new(velocity: f32, direction: Direction) -> Self {
+    pub fn new(velocity: f32, direction: Direction) -> Self {
         Ball {
             velocity, 
             direction: direction.to_unit_vector(),

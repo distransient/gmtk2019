@@ -8,6 +8,10 @@ use amethyst::{
 };
 
 use crate::prefabs::BallPrefabData;
+use crate::player::{
+    Direction,
+    Ball
+};
 
 use log::info;
 
@@ -86,6 +90,7 @@ fn load_ball_prefab(world: &mut World) -> Handle<Prefab<BallPrefabData>> {
 }
 
 fn init_ball(world: &mut World, prefab: Handle<Prefab<BallPrefabData>>) {
+    world.register::<Ball>();
     let mut transform = Transform::default();
     transform.set_translation_xyz(40.0, 40.0, 0.);
 
@@ -97,6 +102,7 @@ fn init_ball(world: &mut World, prefab: Handle<Prefab<BallPrefabData>>) {
         .create_entity()
         .with(prefab.clone())
         .with(transform)
+        .with(Ball::new(1.0f32, Direction::Right))
         .build();
 
 }

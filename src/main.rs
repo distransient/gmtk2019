@@ -17,6 +17,7 @@ use amethyst::{
 mod state;
 mod prefabs;
 mod environment;
+mod player;
 
 use crate::prefabs::BallPrefabData;
 
