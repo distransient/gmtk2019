@@ -1,9 +1,13 @@
-use amethyst::core::{ecs::prelude::*, math::Vector3, Transform};
+use amethyst::core::{
+    ecs::prelude::*,
+    math::{Unit, Vector3},
+    Transform,
+};
 
 use crate::{
-    systems::SpatialGrid,
-    environment::{Line, LevelOffset, TileMap, TileMapId},
+    environment::{LevelOffset, Line, TileMap, TileMapId},
     player::Ball,
+    systems::SpatialGrid,
 };
 
 #[derive(Default, Copy, Clone, Debug)]
@@ -30,19 +34,23 @@ impl<'a> System<'a> for BallMovementSystem {
             let query = spatial_grid.query(&intended_point);
 
             for (line, _) in (&lines, &query).join() {
-                if (line.test_circle_intersection(&intended_point, ball.radius)) {
-                    println!("Collision");
+                if line.test_circle_intersection(&intended_point, ball.radius) {
+                    // This is temporary, for debugging purpose.
+                    // To properly handle the collision, we need to check that the normal goes in the right direction.
+                    let ball_dir = ball.direction.clone().into_inner();
+                    let normal = line.normal.clone().into_inner();
+                    ball.direction =
+                        Unit::new_normalize(ball_dir - 2.0 * ball_dir.dot(&normal) * normal);
                 }
-
             }
 
-//
-//            if tile_map
-//                .get(TileMapId(intended_point.x as u16, intended_point.y as u16))
-//                .map_or(false, |tile| tile.collides())
-//            {
-//                ball.direction = -ball.direction;
-//            }
+            //
+            //            if tile_map
+            //                .get(TileMapId(intended_point.x as u16, intended_point.y as u16))
+            //                .map_or(false, |tile| tile.collides())
+            //            {
+            //                ball.direction = -ball.direction;
+            //            }
 
             // Future collision testing could be done here based on normals
             // and essentially an AABB test with an added radius for the circle.

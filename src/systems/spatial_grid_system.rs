@@ -40,7 +40,10 @@ impl SpatialGrid {
 
     pub fn query(&self, query_position: &Vector2<f32>) -> BitSet {
         let mut query_result = BitSet::new();
-        let query_cell = Vector2::new((query_position[0] / self.cell_size).floor() as u16, (query_position[1] / self.cell_size).floor() as u16);
+        let query_cell = Vector2::new(
+            (query_position[0] / self.cell_size).floor() as u16,
+            (query_position[1] / self.cell_size).floor() as u16,
+        );
         let min_x = if query_cell[0] > 0 {
             query_cell[0] - 1
         } else {

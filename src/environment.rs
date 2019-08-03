@@ -1,12 +1,9 @@
-use crate::{
-    prefabs::TilePrefabs,
-    player::Direction
-};
+use crate::{player::Direction, prefabs::TilePrefabs};
 
 use amethyst::core::{
     components::Transform,
     ecs::prelude::*,
-    math::{Unit, Vector3, Vector2},
+    math::{Unit, Vector2, Vector3},
 };
 use serde::{Deserialize, Serialize};
 use specs_derive::Component;
@@ -153,16 +150,14 @@ impl Line {
         let dot_dir = v_start.dot(&self.direction);
         if dot_dir < -radius || dot_dir > self.length + radius {
             return false;
-        }
-        else if dot_dir > 0.0 && dot_dir < self.length {
+        } else if dot_dir > 0.0 && dot_dir < self.length {
             return true;
         }
 
         let sq_radius = radius * radius;
         if dot_dir < 0.0 && v_start.dot(&v_start) <= sq_radius {
             return true;
-        }
-        else {
+        } else {
             let v_end = pos - self.end;
             if v_end.dot(&v_end) <= sq_radius {
                 return true;
@@ -216,5 +211,10 @@ pub fn create_line(world: &mut World, start: Vector2<f32>, end: Vector2<f32>) {
         let prefabs = world.read_resource::<TilePrefabs>();
         prefabs.get_prefab(Tile::Wall).unwrap().clone()
     };
-    world.create_entity().with(transform).with(wall_prefab).with(line_comp).build();
+    world
+        .create_entity()
+        .with(transform)
+        .with(wall_prefab)
+        .with(line_comp)
+        .build();
 }

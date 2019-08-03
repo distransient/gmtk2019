@@ -34,7 +34,17 @@ impl<'a, 'b> SimpleState for GameState<'a, 'b> {
         let current_prefab_count = data.world.read_resource::<TilePrefabs>().count();
         if current_prefab_count == 1 && self.ball_prefab_progress.is_complete() {
             self.load_all_prefabs(data.world);
-            create_line(data.world, Vector2::new(100.0,100.0), Vector2::new(240.0, 240.0));
+            create_line(
+                data.world,
+                Vector2::new(100.0, 100.0),
+                Vector2::new(240.0, 240.0),
+            );
+
+            create_line(
+                data.world,
+                Vector2::new(100.0, 300.0),
+                Vector2::new(240.0, 440.0),
+            );
         }
         Trans::None
     }
@@ -128,7 +138,7 @@ impl<'a, 'b> GameState<'a, 'b> {
             .create_entity()
             .with(prefab)
             .with(transform)
-            .with(Ball::new(15.0, 1.0f32, Direction::Right))
+            .with(Ball::new(11.0, 1.0f32, Direction::Right))
             .build();
     }
 }
