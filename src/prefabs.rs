@@ -10,10 +10,13 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 use crate::environment::Tile;
+use crate::player::Ball;
 
 #[derive(Debug, Clone, Deserialize, PrefabData)]
 pub struct SpritePrefabData {
     sprite_scene: SpriteScenePrefab,
+
+    ball: Option<Ball>,
 }
 
 #[derive(Default)]

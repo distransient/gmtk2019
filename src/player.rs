@@ -1,12 +1,18 @@
-use amethyst::core::{
-    ecs::prelude::*,
-    math::{Unit, Vector2},
+use amethyst::{
+    assets::PrefabData,
+    core::{
+        ecs::prelude::*,
+        math::{Unit, Vector2},
+    },
+    derive::PrefabData,
+    Error,
 };
 use specs_derive::Component;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Component)]
+#[derive(Component, Copy, Clone, Debug, Deserialize, PrefabData)]
+#[prefab(Component)]
 pub struct Ball {
     pub radius: f32,
     pub velocity: f32, // could probably be raised as game gets more difficult

@@ -41,7 +41,9 @@ impl<'a> System<'a> for BallMovementSystem {
                         Unit::new_normalize(ball_dir - 2.0 * ball_dir.dot(&normal) * normal);
                 }
             }
-            transform.append_translation(Vector3::new(ball.direction.x, ball.direction.y, 0.0));
+            transform.append_translation(
+                ball.velocity * Vector3::new(ball.direction.x, ball.direction.y, 0.0),
+            );
         }
     }
 }

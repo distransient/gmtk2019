@@ -138,19 +138,12 @@ impl<'a, 'b> GameState<'a, 'b> {
     }
 
     fn init_ball(&self, world: &mut World) {
-        world.register::<Ball>();
         let mut transform = Transform::default();
         transform.set_translation_xyz(230.0, 190.0, 0.);
-
         let prefab = {
             let prefabs = world.read_resource::<TilePrefabs>();
             prefabs.get_prefab(Tile::Ball).unwrap().clone()
         };
-        world
-            .create_entity()
-            .with(prefab)
-            .with(transform)
-            .with(Ball::new(11.0, 1.0f32, Direction::Right))
-            .build();
+        world.create_entity().with(prefab).with(transform).build();
     }
 }

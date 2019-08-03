@@ -193,7 +193,7 @@ impl Line {
             cells.push(Vector2::new(x_cell, y));
 
             // Just to be safe. Could be unnecessary
-            cells.push(Vector2::new(x_cell+ 1, y));
+            cells.push(Vector2::new(x_cell + 1, y));
         }
         cells
     }

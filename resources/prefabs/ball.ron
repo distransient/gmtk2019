@@ -211,6 +211,11 @@ Prefab (
                          sprite_number: 0,
                      ),
                  ),
+                 ball: (
+                    radius: 11.0,
+                    velocity: 10.0,
+                    direction: [1.0, 0.0],
+                 ),
              ),
          ),
     ],

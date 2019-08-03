@@ -56,7 +56,11 @@ fn main() -> amethyst::Result<()> {
     let fixed_dispatcher = DispatcherBuilder::new()
         .with(SpatialGridSystem::default(), "spatial_grid_system", &[])
         .with(BallControlSystem, "ball_control_system", &[])
-        .with(BallMovementSystem, "ball_movement_system", &["spatial_grid_system"])
+        .with(
+            BallMovementSystem,
+            "ball_movement_system",
+            &["spatial_grid_system"],
+        )
         .build();
 
     let mut game = Application::new(
