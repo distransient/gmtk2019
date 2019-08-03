@@ -1,12 +1,12 @@
 use amethyst::{
     assets::{
-        AssetStorage, Handle, Loader, Prefab, PrefabData, PrefabLoader, PrefabLoaderSystem,
+        Handle, Prefab, PrefabLoader, 
         ProgressCounter, RonFormat,
     },
     core::transform::Transform,
     input::{get_key, is_close_requested, is_key_down, VirtualKeyCode},
     prelude::*,
-    renderer::{Camera, ImageFormat, SpriteRender, SpriteSheet, SpriteSheetFormat, Texture},
+    renderer::Camera,
     window::ScreenDimensions,
 };
 
@@ -115,7 +115,7 @@ impl MyState  {
             .create_entity()
             .with(self.ball_prefab.as_ref().unwrap().clone())
             .with(transform)
-            .with(Ball::new(1.0f32, Direction::Right))
+            .with(Ball::new(40.0, 1.0f32, Direction::Right))
             .build();
     }
 

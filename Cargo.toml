@@ -5,6 +5,7 @@ authors = ["People <people@people.com>"]
 edition = "2018"
 
 [dependencies]
+specs-static = "0.3.0"
 amethyst = "0.12.0"
 serde = { version = "1.0", features = ["derive"]}
 specs-derive = "0.4.0"

@@ -2,13 +2,10 @@ use amethyst::{
     assets::{PrefabData, ProgressCounter},
     derive::PrefabData,
     ecs::prelude::*,
-    prelude::*,
     renderer::sprite::prefab::SpriteScenePrefab,
     Error,
 };
-use serde::{Deserialize, Serialize};
-
-use crate::player::Ball;
+use serde::{Deserialize};
 
 #[derive(Debug, Clone, Deserialize, PrefabData)]
 pub struct SpritePrefabData {

@@ -1,14 +1,16 @@
-use amethyst::core::math::{Unit, Vector2};
-use amethyst::ecs::prelude::*;
+use amethyst::core::{
+    math::{Unit, Vector2},
+    ecs::prelude::*,
+};
+use specs_derive::Component;
 
 use serde::{Deserialize, Serialize};
 
+#[derive(Component)]
 pub struct Ball {
-    velocity: f32, // could probably be raised as game gets more difficult
-    direction: Unit<Vector2<f32>>,
-}
-impl Component for Ball {
-    type Storage = DenseVecStorage<Self>;
+    pub radius: f32,
+    pub velocity: f32, // could probably be raised as game gets more difficult
+    pub direction: Unit<Vector2<f32>>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -41,8 +43,9 @@ impl Direction {
 }
 
 impl Ball {
-    pub fn new(velocity: f32, direction: Direction) -> Self {
+    pub fn new(radius: f32, velocity: f32, direction: Direction) -> Self {
         Ball {
+            radius,
             velocity,
             direction: direction.to_unit_vector(),
         }

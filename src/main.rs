@@ -18,6 +18,7 @@ mod environment;
 mod player;
 mod prefabs;
 mod state;
+mod systems;
 
 use crate::prefabs::SpritePrefabData;
 
