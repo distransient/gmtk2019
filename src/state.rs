@@ -1,6 +1,6 @@
 use amethyst::{
-    assets::{Handle, Prefab, PrefabLoader, ProgressCounter, RonFormat},
-    core::transform::Transform,
+    assets::{PrefabLoader, ProgressCounter, RonFormat},
+    core::{ecs::prelude::*, transform::Transform},
     input::{get_key, is_close_requested, is_key_down, VirtualKeyCode},
     prelude::*,
     renderer::Camera,
@@ -13,27 +13,25 @@ use crate::prefabs::SpritePrefabData;
 
 use log::info;
 
-#[derive(Default)]
-pub struct MyState {
-    ball_prefab_progress: Option<ProgressCounter>,
-
-    ball_prefab: Option<Handle<Prefab<SpritePrefabData>>>,
-    wall_prefab: Option<Handle<Prefab<SpritePrefabData>>>,
+pub struct GameState<'a, 'b> {
+    ball_prefab_progress: ProgressCounter,
+    fixed_dispatcher: Dispatcher<'a, 'b>,
 }
 
-impl SimpleState for MyState {
+impl<'a, 'b> SimpleState for GameState<'a, 'b> {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
 
         let dimensions = world.read_resource::<ScreenDimensions>().clone();
 
+        self.fixed_dispatcher.setup(&mut world.res);
         init_camera(world, &dimensions);
-        let ball_prefab = self.load_ball_prefab(world);
+        self.load_ball_prefab(world);
         self.init_ball(world);
     }
 
     fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans {
-        if self.ball_prefab_progress.as_ref().unwrap().is_complete() {
+        if self.ball_prefab_progress.is_complete() {
             self.load_all_prefabs(data.world);
             let prefab = {
                 let prefabs = data.world.read_resource::<TilePrefabs>();
@@ -41,6 +39,11 @@ impl SimpleState for MyState {
             };
             data.world.create_entity().with(prefab).build();
         }
+        Trans::None
+    }
+
+    fn fixed_update(&mut self, data: StateData<GameData>) -> SimpleTrans {
+        self.fixed_dispatcher.dispatch(&data.world.res);
         Trans::None
     }
 
@@ -73,16 +76,25 @@ fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
         .build();
 }
 
-impl MyState {
+impl<'a, 'b> GameState<'a, 'b> {
+    pub fn new(
+        ball_prefab_progress_counter: ProgressCounter,
+        fixed_dispatcher: Dispatcher<'a, 'b>,
+    ) -> Self {
+        GameState {
+            ball_prefab_progress: ball_prefab_progress_counter,
+            fixed_dispatcher,
+        }
+    }
+
     fn load_ball_prefab(&mut self, world: &mut World) {
         world.add_resource(TilePrefabs::default());
-        self.ball_prefab_progress = Some(ProgressCounter::new());
         let prefab = {
             world.exec(|loader: PrefabLoader<'_, SpritePrefabData>| {
                 loader.load(
                     "prefabs/ball.ron",
                     RonFormat,
-                    self.ball_prefab_progress.as_mut().unwrap(),
+                    &mut self.ball_prefab_progress,
                 )
             })
         };

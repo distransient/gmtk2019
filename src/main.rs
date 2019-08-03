@@ -1,8 +1,8 @@
 extern crate specs_derive;
 
 use amethyst::{
-    assets::PrefabLoaderSystem,
-    core::transform::TransformBundle,
+    assets::{PrefabLoaderSystem, ProgressCounter},
+    core::{ecs::DispatcherBuilder, transform::TransformBundle},
     input::StringBindings,
     prelude::*,
     renderer::{
@@ -20,7 +20,11 @@ mod prefabs;
 mod state;
 mod systems;
 
-use crate::prefabs::SpritePrefabData;
+use crate::{
+    prefabs::SpritePrefabData,
+    state::GameState,
+    systems::{BallControlSystem, BallMovementSystem},
+};
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -49,7 +53,16 @@ fn main() -> amethyst::Result<()> {
                 .with_plugin(RenderUi::default()),
         )?;
 
-    let mut game = Application::new(resources, state::MyState::default(), game_data)?;
+    let fixed_dispatcher = DispatcherBuilder::new()
+        .with(BallControlSystem, "ball_control_system", &[])
+        .with(BallMovementSystem, "ball_movement_system", &[])
+        .build();
+
+    let mut game = Application::new(
+        resources,
+        GameState::new(ProgressCounter::new(), fixed_dispatcher),
+        game_data,
+    )?;
     game.run();
 
     Ok(())
