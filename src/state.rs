@@ -1,15 +1,15 @@
 use amethyst::{
     assets::{PrefabLoader, ProgressCounter, RonFormat},
-    core::{ecs::prelude::*, transform::Transform},
+    core::{ecs::prelude::*, math::Vector2, transform::Transform},
     input::{get_key, is_close_requested, is_key_down, VirtualKeyCode},
     prelude::*,
     renderer::Camera,
     window::ScreenDimensions,
 };
 
-use crate::environment::{Tile, TilePrefabs};
+use crate::environment::{Line, Tile};
 use crate::player::{Ball, Direction};
-use crate::prefabs::SpritePrefabData;
+use crate::prefabs::{SpritePrefabData, TilePrefabs};
 
 use log::info;
 
@@ -28,16 +28,43 @@ impl<'a, 'b> SimpleState for GameState<'a, 'b> {
         init_camera(world, &dimensions);
         self.load_ball_prefab(world);
         self.init_ball(world);
+
+        world
+            .create_entity()
+            .with(Line::new(
+                Vector2::new(20.0, 20.0),
+                Vector2::new(120.0, 120.0),
+            ))
+            .build();
     }
 
     fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans {
-        if self.ball_prefab_progress.is_complete() {
+        let current_prefab_count = data.world.read_resource::<TilePrefabs>().count();
+        if current_prefab_count == 1 && self.ball_prefab_progress.is_complete() {
             self.load_all_prefabs(data.world);
             let prefab = {
                 let prefabs = data.world.read_resource::<TilePrefabs>();
                 prefabs.get_prefab(Tile::Wall).unwrap().clone()
             };
-            data.world.create_entity().with(prefab).build();
+            let mut transform = Transform::default();
+            transform.set_translation_xyz(160.0, 160.0, 0.0);
+            data.world
+                .create_entity()
+                .with(prefab)
+                .with(transform)
+                .build();
+
+            let prefab = {
+                let prefabs = data.world.read_resource::<TilePrefabs>();
+                prefabs.get_prefab(Tile::Breakable).unwrap().clone()
+            };
+            let mut transform = Transform::default();
+            transform.set_translation_xyz(200.0, 200.0, 0.0);
+            data.world
+                .create_entity()
+                .with(prefab)
+                .with(transform)
+                .build();
         }
         Trans::None
     }
@@ -68,7 +95,6 @@ impl<'a, 'b> SimpleState for GameState<'a, 'b> {
 fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
     let mut transform = Transform::default();
     transform.set_translation_xyz(dimensions.width() * 0.5, dimensions.height() * 0.5, 1.);
-
     world
         .create_entity()
         .with(Camera::standard_2d(dimensions.width(), dimensions.height()))
@@ -104,19 +130,25 @@ impl<'a, 'b> GameState<'a, 'b> {
     }
 
     fn load_all_prefabs(&mut self, world: &mut World) {
-        let prefab = {
+        let wall_prefab = {
             world.exec(|loader: PrefabLoader<'_, SpritePrefabData>| {
                 loader.load("prefabs/wall.ron", RonFormat, ())
             })
         };
+        let breakable_prefab = {
+            world.exec(|loader: PrefabLoader<'_, SpritePrefabData>| {
+                loader.load("prefabs/breakable.ron", RonFormat, ())
+            })
+        };
         let mut tile_prefabs = world.write_resource::<TilePrefabs>();
-        tile_prefabs.insert_prefab(Tile::Wall, prefab);
+        tile_prefabs.insert_prefab(Tile::Wall, wall_prefab);
+        tile_prefabs.insert_prefab(Tile::Breakable, breakable_prefab);
     }
 
     fn init_ball(&self, world: &mut World) {
         world.register::<Ball>();
         let mut transform = Transform::default();
-        transform.set_translation_xyz(40.0, 40.0, 0.);
+        transform.set_translation_xyz(40.0, 160.0, 0.);
 
         let prefab = {
             let prefabs = world.read_resource::<TilePrefabs>();

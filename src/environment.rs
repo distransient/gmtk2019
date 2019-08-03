@@ -1,6 +1,4 @@
-use crate::{player::Direction, prefabs::SpritePrefabData};
-use amethyst::assets::{Handle, Prefab};
-use std::collections::HashMap;
+use crate::player::Direction;
 
 use amethyst::core::{
     components::Transform,
@@ -91,21 +89,6 @@ impl Tile {
     }
 }
 
-#[derive(Default)]
-pub struct TilePrefabs {
-    prefabs: HashMap<Tile, Handle<Prefab<SpritePrefabData>>>,
-}
-
-impl TilePrefabs {
-    pub fn insert_prefab(&mut self, tile: Tile, prefab: Handle<Prefab<SpritePrefabData>>) {
-        self.prefabs.insert(tile, prefab);
-    }
-
-    pub fn get_prefab(&self, tile: Tile) -> Option<&Handle<Prefab<SpritePrefabData>>> {
-        self.prefabs.get(&tile)
-    }
-}
-
 #[derive(Default, Debug, Clone, Serialize, Deserialize)]
 pub struct EnvironmentConfig {
     pub map: String,
@@ -128,5 +111,59 @@ mod tests {
                 assert_eq!(id.1, y);
             }
         }
+    }
+}
+
+pub struct Line {
+    start: Vector2<f32>,
+    end: Vector2<f32>,
+
+    direction: Unit<Vector2<f32>>,
+    normal: Unit<Vector2<f32>>,
+}
+
+impl Component for Line {
+    type Storage = DenseVecStorage<Self>;
+}
+
+impl Line {
+    pub fn new(start: Vector2<f32>, end: Vector2<f32>) -> Line {
+        let diff = end - start;
+        Line {
+            start,
+            end,
+            direction: Unit::new_normalize(diff),
+            normal: Unit::new_normalize(Vector2::new(-diff[0], diff[1])),
+        }
+    }
+
+    pub fn get_list_cells(&self, cell_size: f32) -> Vec<Vector2<u16>> {
+        let mut start_point = self.start / cell_size;
+        let start_cell = Vector2::new(start_point[0].floor() as u16, start_point[1].floor() as u16);
+        let end_point = self.end / cell_size;
+        let end_cell = Vector2::new(end_point[0].floor() as u16, end_point[1].floor() as u16);
+
+        let mut cells = Vec::new();
+        let direction = self.direction;
+
+        for x in start_cell[0]..end_cell[0] {
+            // direction[0] can't be 0 here since we move on X axis
+            let y = start_point[1] + ((x as f32 - start_point[0]) / direction[0]) * direction[1];
+            let y_cell = y.floor() as u16;
+            cells.push(Vector2::new(x, y_cell));
+
+            // Just to be safe. Could be unnecessary
+            cells.push(Vector2::new(x, y_cell + 1));
+        }
+        for y in start_cell[1]..end_cell[1] {
+            // direction[1] can't be 0 here since we move on X axis
+            let x = start_point[0] + ((y as f32 - start_point[1]) / direction[1]) * direction[0];
+            let x_cell = x.floor() as u16;
+            cells.push(Vector2::new(x_cell, y));
+
+            // Just to be safe. Could be unnecessary
+            cells.push(Vector2::new(x_cell, y));
+        }
+        cells
     }
 }

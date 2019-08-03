@@ -23,7 +23,7 @@ mod systems;
 use crate::{
     prefabs::SpritePrefabData,
     state::GameState,
-    systems::{BallControlSystem, BallMovementSystem},
+    systems::{BallControlSystem, BallMovementSystem, SpatialGridSystem},
 };
 
 fn main() -> amethyst::Result<()> {
@@ -56,6 +56,7 @@ fn main() -> amethyst::Result<()> {
     let fixed_dispatcher = DispatcherBuilder::new()
         .with(BallControlSystem, "ball_control_system", &[])
         .with(BallMovementSystem, "ball_movement_system", &[])
+        .with(SpatialGridSystem::default(), "spatial_grid_system", &[])
         .build();
 
     let mut game = Application::new(

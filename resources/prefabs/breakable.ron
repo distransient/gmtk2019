@@ -8,7 +8,7 @@ Prefab (
                      // SpriteRenderPrefab
                      render: (
                          sheet: "main_sheet",
-                         sprite_number: 7,
+                         sprite_number: 2,
                      ),
                  ),
              ),
