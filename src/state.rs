@@ -28,14 +28,6 @@ impl<'a, 'b> SimpleState for GameState<'a, 'b> {
         init_camera(world, &dimensions);
         self.load_ball_prefab(world);
         self.init_ball(world);
-
-        world
-            .create_entity()
-            .with(Line::new(
-                Vector2::new(20.0, 20.0),
-                Vector2::new(120.0, 120.0),
-            ))
-            .build();
     }
 
     fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans {
@@ -136,7 +128,7 @@ impl<'a, 'b> GameState<'a, 'b> {
             .create_entity()
             .with(prefab)
             .with(transform)
-            .with(Ball::new(40.0, 1.0f32, Direction::Right))
+            .with(Ball::new(15.0, 1.0f32, Direction::Right))
             .build();
     }
 }

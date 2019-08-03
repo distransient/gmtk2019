@@ -4,4 +4,4 @@ mod spatial_grid_system;
 
 pub use ball_control_system::BallControlSystem;
 pub use ball_movement_system::BallMovementSystem;
-pub use spatial_grid_system::SpatialGridSystem;
+pub use spatial_grid_system::{SpatialGrid, SpatialGridSystem};

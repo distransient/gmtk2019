@@ -118,11 +118,12 @@ mod tests {
 }
 
 pub struct Line {
-    start: Vector2<f32>,
-    end: Vector2<f32>,
+    pub start: Vector2<f32>,
+    pub end: Vector2<f32>,
 
     pub direction: Unit<Vector2<f32>>,
     pub normal: Unit<Vector2<f32>>,
+    pub length: f32,
 }
 
 impl Component for Line {
@@ -137,7 +138,37 @@ impl Line {
             end,
             direction: Unit::new_normalize(diff),
             normal: Unit::new_normalize(Vector2::new(-diff[0], diff[1])),
+            length: diff.norm(),
         }
+    }
+
+    pub fn test_circle_intersection(&self, pos: &Vector2<f32>, radius: f32) -> bool {
+        let v_start = pos - self.start;
+
+        let dot_normal = v_start.dot(&self.normal);
+        if dot_normal.abs() > radius {
+            return false;
+        }
+
+        let dot_dir = v_start.dot(&self.direction);
+        if dot_dir < -radius || dot_dir > self.length + radius {
+            return false;
+        }
+        else if dot_dir > 0.0 && dot_dir < self.length {
+            return true;
+        }
+
+        let sq_radius = radius * radius;
+        if dot_dir < 0.0 && v_start.dot(&v_start) <= sq_radius {
+            return true;
+        }
+        else {
+            let v_end = pos - self.end;
+            if v_end.dot(&v_end) <= sq_radius {
+                return true;
+            }
+        }
+        false
     }
 
     pub fn get_list_cells(&self, cell_size: f32) -> Vec<Vector2<u16>> {
@@ -180,7 +211,7 @@ pub fn create_line(world: &mut World, start: Vector2<f32>, end: Vector2<f32>) {
     let mut transform = Transform::default();
     transform.set_rotation_2d(angle);
     transform.set_translation_xyz(pos[0], pos[1], 0.0);
-    transform.set_scale(Vector3::new(scale, 1.0, 1.0));
+    transform.set_scale(Vector3::new(scale, 2.0, 1.0));
     let wall_prefab = {
         let prefabs = world.read_resource::<TilePrefabs>();
         prefabs.get_prefab(Tile::Wall).unwrap().clone()
