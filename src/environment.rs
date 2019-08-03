@@ -3,31 +3,65 @@ use amethyst::assets::{Handle, Prefab};
 use std::collections::HashMap;
 
 use amethyst::core::{
-    math::{Unit, Vector2},
     components::Transform,
     ecs::prelude::*,
+    math::{Unit, Vector2},
 };
 use serde::{Deserialize, Serialize};
-use specs_static::Storage as StaticStorage;
 use specs_derive::Component;
+use specs_static::{Id, Storage as StaticStorage};
 
-pub type TileMap = StaticStorage<Tile, <Tile as Component>::Storage, (u32, u32)>;
+#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+pub struct TileMapId(pub u16, pub u16);
+
+impl Id for TileMapId {
+    fn from_u32(value: u32) -> Self {
+        TileMapId((value % (1 << 16)) as u16, (value >> 16) as u16)
+    }
+
+    fn id(&self) -> u32 {
+        let x = self.0.to_le_bytes();
+        let y = self.1.to_le_bytes();
+        u32::from_le_bytes([x[0], x[1], y[0], y[1]])
+    }
+}
+
+pub type TileMap = StaticStorage<Tile, <Tile as Component>::Storage, TileMapId>;
 
 /// Resource to track offset+scale of level's tiles from Transform 0,0 to index 0,0
 #[derive(Default, Clone, Debug)]
 pub struct LevelOffset(pub Transform);
 
-pub fn attempt_bounce(from_transform: &Transform, on_map: &TileMap, with_offset: &LevelOffset) -> Option<Unit<Vector2<f32>>> {
+pub fn attempt_bounce(
+    from_transform: &Transform,
+    on_map: &TileMap,
+    with_offset: &LevelOffset,
+) -> Option<Unit<Vector2<f32>>> {
     let transformed = from_transform.matrix() * with_offset.0.matrix();
-    let index = (transformed.column(3).x as u32, transformed.column(3).y as u32);
+    let index = (
+        transformed.column(3).x as u16,
+        transformed.column(3).y as u16,
+    );
 
-    if on_map.get((index.0, index.1 + 1)).map_or(false, |tile| tile == Tile::Pusher) {
+    if on_map
+        .get(TileMapId(index.0, index.1 + 1))
+        .map_or(false, |tile| *tile == Tile::Pusher)
+    {
         Some((Direction::Up).to_unit_vector())
-    } else if on_map.get((index.0, index.1 - 1)).map_or(false, |tile| tile == Tile::Pusher) {
+    } else if on_map
+        .get(TileMapId(index.0, index.1 - 1))
+        .map_or(false, |tile| *tile == Tile::Pusher)
+    {
         Some((Direction::Down).to_unit_vector())
-    } else if on_map.get((index.0 - 1, index.1)).map_or(false, |tile| tile == Tile::Pusher) {
+    } else if on_map
+        .get(TileMapId(index.0 - 1, index.1))
+        .map_or(false, |tile| *tile == Tile::Pusher)
+    {
         Some((Direction::Left).to_unit_vector())
-    } else if on_map.get((index.0 + 1, index.1)).map_or(false, |tile| tile == Tile::Pusher) {
+    } else if on_map
+        .get(TileMapId(index.0 + 1, index.1))
+        .map_or(false, |tile| *tile == Tile::Pusher)
+    {
         Some((Direction::Right).to_unit_vector())
     } else {
         None
@@ -64,4 +98,17 @@ pub struct EnvironmentConfig {
     pub start: (f32, f32),
     pub starting_direction: Direction,
     pub player_speed: (f32),
+}
+
+#[cfg(test)]
+mod tests {
+    use super::TileMapId;
+    use specs_static::Id;
+
+    #[test]
+    fn are_my_u16s_screwed() {
+        let id = TileMapId::from_u32(TileMapId(2, 16).id());
+        assert_eq!(id.0, 2);
+        assert_eq!(id.1, 16);
+    }
 }

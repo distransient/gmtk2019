@@ -1,6 +1,6 @@
 use amethyst::core::{
-    math::{Unit, Vector2},
     ecs::prelude::*,
+    math::{Unit, Vector2},
 };
 use specs_derive::Component;
 

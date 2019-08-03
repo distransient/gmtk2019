@@ -5,7 +5,7 @@ use amethyst::{
     renderer::sprite::prefab::SpriteScenePrefab,
     Error,
 };
-use serde::{Deserialize};
+use serde::Deserialize;
 
 #[derive(Debug, Clone, Deserialize, PrefabData)]
 pub struct SpritePrefabData {

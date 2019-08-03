@@ -1,8 +1,5 @@
 use amethyst::{
-    assets::{
-        Handle, Prefab, PrefabLoader, 
-        ProgressCounter, RonFormat,
-    },
+    assets::{Handle, Prefab, PrefabLoader, ProgressCounter, RonFormat},
     core::transform::Transform,
     input::{get_key, is_close_requested, is_key_down, VirtualKeyCode},
     prelude::*,
@@ -97,11 +94,7 @@ impl MyState {
     fn load_all_prefabs(&mut self, world: &mut World) {
         let prefab = {
             world.exec(|loader: PrefabLoader<'_, SpritePrefabData>| {
-                loader.load(
-                    "prefabs/wall.ron",
-                    RonFormat,
-                    (),
-                )
+                loader.load("prefabs/wall.ron", RonFormat, ())
             })
         };
         let mut tile_prefabs = world.write_resource::<TilePrefabs>();
