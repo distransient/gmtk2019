@@ -24,6 +24,7 @@ impl Id for TileMapId {
 
     fn id(&self) -> u32 {
         // I have literally no idea if this breaks with big endian platforms.
+        // Moxi tells me it doesn't so blame him if it does.
         let x = self.0.to_le_bytes();
         let y = self.1.to_le_bytes();
         u32::from_le_bytes([x[0], x[1], y[0], y[1]])
@@ -79,6 +80,15 @@ pub enum Tile {
     Breakable,
     Pusher,
     Ball,
+}
+
+impl Tile {
+    pub fn collides(self) -> bool {
+        match self {
+            Tile::Nothing | Tile::Ball => false,
+            Tile::Wall | Tile::Breakable | Tile::Pusher => true,
+        }
+    }
 }
 
 #[derive(Default)]
