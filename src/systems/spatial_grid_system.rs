@@ -37,13 +37,38 @@ impl SpatialGrid {
             set.add(entity.id());
         }
     }
+
+    pub fn query(&self, query_position: Vector2<f32>) -> BitSet {
+        let mut query_result = BitSet::new();
+        let query_cell = Vector2::new((query_position[0] / self.cell_size).floor() as u16, (query_position[1] / self.cell_size).floor() as u16);
+        let min_x = if query_cell[0] > 0 {
+            query_cell[0] - 1
+        } else {
+            0u16
+        };
+        let min_y = if query_cell[1] > 0 {
+            query_cell[1] - 1
+        } else {
+            0u16
+        };
+        for x in min_x..query_cell[0] + 1 {
+            for y in min_y..query_cell[1] + 1 {
+                let ind = x as u32 + (u16::MAX as u32) * (y as u32);
+                match self.cells.get(&ind) {
+                    Some(bs) => query_result |= bs,
+                    None => (),
+                }
+            }
+        }
+        query_result
+    }
 }
 
 #[derive(Default, Copy, Clone, Debug)]
 pub struct SpatialGridSystem;
 
 impl<'a> System<'a> for SpatialGridSystem {
-    type SystemData = (Entities<'a>, WriteStorage<'a, Line>, Write<'a, SpatialGrid>);
+    type SystemData = (Entities<'a>, ReadStorage<'a, Line>, Write<'a, SpatialGrid>);
 
     fn run(&mut self, data: Self::SystemData) {
         let (entities, lines, mut spatial_grid) = data;

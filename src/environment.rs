@@ -1,9 +1,12 @@
-use crate::player::Direction;
+use crate::{
+    prefabs::TilePrefabs,
+    player::Direction
+};
 
 use amethyst::core::{
     components::Transform,
     ecs::prelude::*,
-    math::{Unit, Vector2},
+    math::{Unit, Vector3, Vector2},
 };
 use serde::{Deserialize, Serialize};
 use specs_derive::Component;
@@ -118,8 +121,8 @@ pub struct Line {
     start: Vector2<f32>,
     end: Vector2<f32>,
 
-    direction: Unit<Vector2<f32>>,
-    normal: Unit<Vector2<f32>>,
+    pub direction: Unit<Vector2<f32>>,
+    pub normal: Unit<Vector2<f32>>,
 }
 
 impl Component for Line {
@@ -166,4 +169,21 @@ impl Line {
         }
         cells
     }
+}
+
+pub fn create_line(world: &mut World, start: Vector2<f32>, end: Vector2<f32>) {
+    let line_comp = Line::new(start, end);
+    let scale = (end - start).norm() / 40.0;
+    let dir = line_comp.direction;
+    let angle = dir[1].atan2(dir[0]);
+    let pos = (start + end) / 2.0;
+    let mut transform = Transform::default();
+    transform.set_rotation_2d(angle);
+    transform.set_translation_xyz(pos[0], pos[1], 0.0);
+    transform.set_scale(Vector3::new(scale, 1.0, 1.0));
+    let wall_prefab = {
+        let prefabs = world.read_resource::<TilePrefabs>();
+        prefabs.get_prefab(Tile::Wall).unwrap().clone()
+    };
+    world.create_entity().with(transform).with(wall_prefab).with(line_comp).build();
 }

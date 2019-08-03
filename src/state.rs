@@ -7,7 +7,7 @@ use amethyst::{
     window::ScreenDimensions,
 };
 
-use crate::environment::{Line, Tile};
+use crate::environment::{create_line, Line, Tile};
 use crate::player::{Ball, Direction};
 use crate::prefabs::{SpritePrefabData, TilePrefabs};
 
@@ -42,29 +42,7 @@ impl<'a, 'b> SimpleState for GameState<'a, 'b> {
         let current_prefab_count = data.world.read_resource::<TilePrefabs>().count();
         if current_prefab_count == 1 && self.ball_prefab_progress.is_complete() {
             self.load_all_prefabs(data.world);
-            let prefab = {
-                let prefabs = data.world.read_resource::<TilePrefabs>();
-                prefabs.get_prefab(Tile::Wall).unwrap().clone()
-            };
-            let mut transform = Transform::default();
-            transform.set_translation_xyz(160.0, 160.0, 0.0);
-            data.world
-                .create_entity()
-                .with(prefab)
-                .with(transform)
-                .build();
-
-            let prefab = {
-                let prefabs = data.world.read_resource::<TilePrefabs>();
-                prefabs.get_prefab(Tile::Breakable).unwrap().clone()
-            };
-            let mut transform = Transform::default();
-            transform.set_translation_xyz(200.0, 200.0, 0.0);
-            data.world
-                .create_entity()
-                .with(prefab)
-                .with(transform)
-                .build();
+            create_line(data.world, Vector2::new(100.0,100.0), Vector2::new(240.0, 240.0));
         }
         Trans::None
     }
