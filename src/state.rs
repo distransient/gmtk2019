@@ -36,14 +36,26 @@ impl<'a, 'b> SimpleState for GameState<'a, 'b> {
             self.load_all_prefabs(data.world);
             create_line(
                 data.world,
-                Vector2::new(100.0, 100.0),
-                Vector2::new(240.0, 240.0),
+                Vector2::new(100.0, 240.0),
+                Vector2::new(240.0, 100.0),
             );
 
             create_line(
                 data.world,
                 Vector2::new(100.0, 300.0),
                 Vector2::new(240.0, 440.0),
+            );
+
+            create_line(
+                data.world,
+                Vector2::new(340.0, 440.0),
+                Vector2::new(480.0, 300.0),
+            );
+
+            create_line(
+                data.world,
+                Vector2::new(340.0, 100.0),
+                Vector2::new(480.0, 240.0),
             );
         }
         Trans::None
@@ -128,7 +140,7 @@ impl<'a, 'b> GameState<'a, 'b> {
     fn init_ball(&self, world: &mut World) {
         world.register::<Ball>();
         let mut transform = Transform::default();
-        transform.set_translation_xyz(40.0, 160.0, 0.);
+        transform.set_translation_xyz(230.0, 190.0, 0.);
 
         let prefab = {
             let prefabs = world.read_resource::<TilePrefabs>();

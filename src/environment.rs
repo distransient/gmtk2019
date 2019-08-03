@@ -173,6 +173,8 @@ impl Line {
         let end_cell = Vector2::new(end_point[0].floor() as u16, end_point[1].floor() as u16);
 
         let mut cells = Vec::new();
+        cells.push(start_cell);
+        cells.push(end_cell);
         let direction = self.direction;
 
         for x in start_cell[0]..end_cell[0] {
@@ -191,7 +193,7 @@ impl Line {
             cells.push(Vector2::new(x_cell, y));
 
             // Just to be safe. Could be unnecessary
-            cells.push(Vector2::new(x_cell, y));
+            cells.push(Vector2::new(x_cell+ 1, y));
         }
         cells
     }

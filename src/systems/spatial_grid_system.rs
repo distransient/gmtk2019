@@ -13,7 +13,7 @@ pub struct SpatialGrid {
 impl Default for SpatialGrid {
     fn default() -> Self {
         SpatialGrid {
-            cell_size: 40f32,
+            cell_size: 50f32,
             cells: HashMap::new(),
         }
     }
