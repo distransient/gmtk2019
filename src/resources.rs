@@ -24,6 +24,7 @@ use amethyst::{
 use crate::prefabs::GamePrefab;
 use std::fs::read_dir;
 use std::collections::HashMap;
+use tiled::{Map, TmxFormat};
 
 fn load_prefab(world: &mut World, path: String, progress: &mut ProgressCounter) -> Option<Handle<Prefab<GamePrefab>>> {
     Some(
@@ -56,5 +57,39 @@ impl<'a> PrefabResource {
         prefabs.ball = load_prefab(world, format!("{}{}", &dir, "ball.ron"), progress);
 
         world.add_resource(prefabs);
+    }
+}
+
+#[derive(Default)]
+pub struct MapResource {
+    maps: HashMap<String, Handle<Map>>,
+}
+
+impl MapResource {
+    pub fn initialize(world: &mut World, progress: &mut ProgressCounter) {
+        let mut maps = MapResource::default();
+        let dir = application_root_dir()
+            .unwrap()
+            .into_os_string()
+            .into_string()
+            .unwrap()
+            + "/resources/maps/";
+
+        type SystemData<'a> = (
+            ReadExpect<'a, Loader>,
+            Read<'a, AssetStorage<Map>>,
+        );
+        // Right now, just load a single map. In the future we'll probably want
+        // a map manifest file.
+        let map_handle = world.exec(|(loader, map_storage): SystemData| {
+            loader.load(
+                dir + "default.tmx",
+                TmxFormat,
+                &mut *progress,
+                &map_storage,
+            )
+        });
+        maps.maps.insert(String::from("default"), map_handle.clone());
+        world.add_resource(maps);
     }
 }

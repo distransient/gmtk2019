@@ -20,6 +20,8 @@ impl LoadState {
 impl SimpleState for LoadState {
     fn on_start(&mut self, mut data: StateData<GameData>) {
         crate::resources::PrefabResource::initialize(data.world, &mut self.progress);
+        // Initialize map. In the future, we most likely will want to modify this to load N amount of maps in a directory
+        crate::resources::MapResource::initialize(data.world, &mut self.progress);
     }
 
     fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans {
