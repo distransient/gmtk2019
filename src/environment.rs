@@ -1,4 +1,4 @@
-use crate::{player::Direction, prefabs::SpritePrefabData};
+use crate::{player::Direction, prefabs::GamePrefab};
 use amethyst::assets::{Handle, Prefab};
 use std::collections::HashMap;
 
@@ -15,15 +15,15 @@ pub enum Tile {
 
 #[derive(Default)]
 pub struct TilePrefabs {
-    prefabs: HashMap<Tile, Handle<Prefab<SpritePrefabData>>>,
+    prefabs: HashMap<Tile, Handle<Prefab<GamePrefab>>>,
 }
 
 impl TilePrefabs {
-    pub fn insert_prefab(&mut self, tile: Tile, prefab: Handle<Prefab<SpritePrefabData>>) {
+    pub fn insert_prefab(&mut self, tile: Tile, prefab: Handle<Prefab<GamePrefab>>) {
         self.prefabs.insert(tile, prefab);
     }
 
-    pub fn get_prefab(&self, tile: Tile) -> Option<&Handle<Prefab<SpritePrefabData>>> {
+    pub fn get_prefab(&self, tile: Tile) -> Option<&Handle<Prefab<GamePrefab>>> {
         self.prefabs.get(&tile)
     }
 }

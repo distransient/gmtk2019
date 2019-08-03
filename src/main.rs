@@ -17,9 +17,9 @@ use amethyst::{
 mod environment;
 mod player;
 mod prefabs;
-mod state;
+mod resources;
+mod states;
 
-use crate::prefabs::SpritePrefabData;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -31,7 +31,7 @@ fn main() -> amethyst::Result<()> {
 
     let game_data = GameDataBuilder::default()
         .with(
-            PrefabLoaderSystem::<SpritePrefabData>::default(),
+            PrefabLoaderSystem::<prefabs::GamePrefab>::default(),
             "prefab_loader",
             &[],
         )
@@ -48,7 +48,7 @@ fn main() -> amethyst::Result<()> {
                 .with_plugin(RenderUi::default()),
         )?;
 
-    let mut game = Application::new(resources, state::MyState::default(), game_data)?;
+    let mut game = Application::new(resources, states::LoadState::new(), game_data)?;
     game.run();
 
     Ok(())

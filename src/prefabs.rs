@@ -10,7 +10,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::player::Ball;
 
-#[derive(Debug, Clone, Deserialize, PrefabData)]
-pub struct SpritePrefabData {
-    sprite_scene: SpriteScenePrefab,
+#[derive(Default, Clone, Deserialize, Serialize, PrefabData)]
+#[serde(default)]
+#[serde(deny_unknown_fields)]
+pub struct GamePrefab {
+    pub sprite_scene: Option<SpriteScenePrefab>,
 }

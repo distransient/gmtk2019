@@ -12,7 +12,8 @@ use amethyst::{
 
 use crate::environment::{Tile, TilePrefabs};
 use crate::player::{Ball, Direction};
-use crate::prefabs::SpritePrefabData;
+use crate::resources;
+use crate::prefabs;
 
 use log::info;
 
@@ -26,13 +27,7 @@ pub struct MyState {
 
 impl SimpleState for MyState {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
-        let world = data.world;
-
-        let dimensions = world.read_resource::<ScreenDimensions>().clone();
-
-        init_camera(world, &dimensions);
-        let ball_prefab = self.load_ball_prefab(world);
-        self.init_ball(world);
+        
     }
 
     fn update(&mut self, data: &mut StateData<GameData>) -> SimpleTrans {
@@ -97,11 +92,7 @@ impl MyState {
     fn load_all_prefabs(&mut self, world: &mut World) {
         let prefab = {
             world.exec(|loader: PrefabLoader<'_, SpritePrefabData>| {
-                loader.load(
-                    "prefabs/wall.ron",
-                    RonFormat,
-                    (),
-                )
+                loader.load("prefabs/wall.ron", RonFormat, ())
             })
         };
         let mut tile_prefabs = world.write_resource::<TilePrefabs>();
