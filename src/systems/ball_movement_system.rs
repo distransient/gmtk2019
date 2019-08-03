@@ -35,26 +35,12 @@ impl<'a> System<'a> for BallMovementSystem {
 
             for (line, _) in (&lines, &query).join() {
                 if line.test_circle_intersection(&intended_point, ball.radius) {
-                    // This is temporary, for debugging purpose.
-                    // To properly handle the collision, we need to check that the normal goes in the right direction.
                     let ball_dir = ball.direction.clone().into_inner();
                     let normal = line.normal.clone().into_inner();
                     ball.direction =
                         Unit::new_normalize(ball_dir - 2.0 * ball_dir.dot(&normal) * normal);
                 }
             }
-
-            //
-            //            if tile_map
-            //                .get(TileMapId(intended_point.x as u16, intended_point.y as u16))
-            //                .map_or(false, |tile| tile.collides())
-            //            {
-            //                ball.direction = -ball.direction;
-            //            }
-
-            // Future collision testing could be done here based on normals
-            // and essentially an AABB test with an added radius for the circle.
-
             transform.append_translation(Vector3::new(ball.direction.x, ball.direction.y, 0.0));
         }
     }
