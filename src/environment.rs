@@ -14,12 +14,16 @@ use specs_static::{Id, Storage as StaticStorage};
 #[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct TileMapId(pub u16, pub u16);
 
+// Don't ask
 impl Id for TileMapId {
     fn from_u32(value: u32) -> Self {
+        // Ok since you're so nosy. This packs two u16's into one u32.
+        // This code is adapted from https://gist.github.com/substack/525eaea52d0c7f52f2753c6fea28b9e8
         TileMapId((value % (1 << 16)) as u16, (value >> 16) as u16)
     }
 
     fn id(&self) -> u32 {
+        // I have literally no idea if this breaks with big endian platforms.
         let x = self.0.to_le_bytes();
         let y = self.1.to_le_bytes();
         u32::from_le_bytes([x[0], x[1], y[0], y[1]])
@@ -107,8 +111,12 @@ mod tests {
 
     #[test]
     fn are_my_u16s_screwed() {
-        let id = TileMapId::from_u32(TileMapId(2, 16).id());
-        assert_eq!(id.0, 2);
-        assert_eq!(id.1, 16);
+        for x in 0..64 {
+            for y in 0..64 {
+                let id = TileMapId::from_u32(TileMapId(x, y).id());
+                assert_eq!(id.0, x);
+                assert_eq!(id.1, y);
+            }
+        }
     }
 }
